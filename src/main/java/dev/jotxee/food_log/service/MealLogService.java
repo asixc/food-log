@@ -33,7 +33,13 @@ public class MealLogService {
     }
 
     public MealLogRequest updateMeal(String email, MealLogRequest request) {
-        return mealLogRepository.findById(email).map(existingMeal -> {
+            return mealLogRepository.findById(email).map(existingMeal -> {
+                updateMealFields(existingMeal, request);
+                return MealLogMapper.toDTO(mealLogRepository.save(existingMeal));
+            }).orElseThrow(() -> new EntityNotFoundException("MealLog not found for email: " + email));
+        }
+
+        private void updateMealFields(MealLog existingMeal, MealLogRequest request) {
             if (StringUtils.hasText(request.mealType())) existingMeal.setMealType(request.mealType());
             if (request.date() != null) existingMeal.setDate(request.date());
             if (request.time() != null) existingMeal.setTime(request.time());
@@ -46,10 +52,7 @@ public class MealLogService {
             if (StringUtils.hasText(request.dietType())) existingMeal.setDietType(request.dietType());
             if (request.diners() != null) existingMeal.setDiners(request.diners());
             if (StringUtils.hasText(request.companions())) existingMeal.setCompanions(request.companions());
-
-            return MealLogMapper.toDTO(mealLogRepository.save(existingMeal));
-        }).orElseThrow(() -> new EntityNotFoundException("MealLog not found for email: " + email));
-    }
+        }
 
     public void deleteMeal(String email) {
         mealLogRepository.deleteById(email);
