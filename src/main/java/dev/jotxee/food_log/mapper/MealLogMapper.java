@@ -2,11 +2,13 @@ package dev.jotxee.food_log.mapper;
 
 import dev.jotxee.food_log.dto.MealLogRequest;
 import dev.jotxee.food_log.entity.MealLog;
+import dev.jotxee.food_log.enums.MoodEnum;
 
 public class MealLogMapper {
 
     public static MealLog toEntity(MealLogRequest request) {
         MealLog entity = new MealLog();
+        entity.setId(request.id());
         entity.setEmail(request.email());
         entity.setMealType(request.mealType());
         entity.setDate(request.date());
@@ -16,7 +18,7 @@ public class MealLogMapper {
         entity.setPhotoUrl(request.photoUrl());
         entity.setNotes(request.notes());
         entity.setLocation(request.location());
-        entity.setMood(request.mood());
+        entity.setMood(request.mood() != null ? request.mood().getValue() : null);
         entity.setDietType(request.dietType());
         entity.setDiners(request.diners());
         entity.setCompanions(request.companions());
@@ -25,6 +27,7 @@ public class MealLogMapper {
 
     public static MealLogRequest toDTO(MealLog entity) {
         return new MealLogRequest(
+                entity.getId(),
                 entity.getEmail(),
                 entity.getMealType(),
                 entity.getDate(),
@@ -34,7 +37,7 @@ public class MealLogMapper {
                 entity.getPhotoUrl(),
                 entity.getNotes(),
                 entity.getLocation(),
-                entity.getMood(),
+                entity.getMood() != null ? MoodEnum.fromValue(entity.getMood()) : null,
                 entity.getDietType(),
                 entity.getDiners(),
                 entity.getCompanions()

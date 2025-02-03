@@ -1,19 +1,23 @@
 package dev.jotxee.food_log.dto;
 
+import dev.jotxee.food_log.enums.MoodEnum;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 public record MealLogRequest(
+        Long id,
         String email,
-        String mealType,
-        LocalDate date,
-        LocalTime time,
-        String foodItems,
+        @NotNull String mealType,
+        @NotNull LocalDate date,
+        @NotNull LocalTime time,
+        @NotNull String foodItems,
         Double calories,
         String photoUrl,
         String notes,
         String location,
-        String mood,
+        @NotNull MoodEnum mood,
         String dietType,
         Integer diners,
         String companions

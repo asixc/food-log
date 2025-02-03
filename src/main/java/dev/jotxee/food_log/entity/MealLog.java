@@ -15,6 +15,10 @@ import java.time.LocalDateTime;
 public class MealLog {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "email")
     private String email; // Correo electrónico del usuario que registró la comida
 
     @Column(name = "meal_type", nullable = false)

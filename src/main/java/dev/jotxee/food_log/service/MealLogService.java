@@ -8,6 +8,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,7 +49,7 @@ public class MealLogService {
             if (StringUtils.hasText(request.photoUrl())) existingMeal.setPhotoUrl(request.photoUrl());
             if (StringUtils.hasText(request.notes())) existingMeal.setNotes(request.notes());
             if (StringUtils.hasText(request.location())) existingMeal.setLocation(request.location());
-            if (StringUtils.hasText(request.mood())) existingMeal.setMood(request.mood());
+            if (request.mood() != null && StringUtils.hasText(request.mood().name())) existingMeal.setMood(request.mood().name());
             if (StringUtils.hasText(request.dietType())) existingMeal.setDietType(request.dietType());
             if (request.diners() != null) existingMeal.setDiners(request.diners());
             if (StringUtils.hasText(request.companions())) existingMeal.setCompanions(request.companions());
@@ -56,5 +57,15 @@ public class MealLogService {
 
     public void deleteMeal(String email) {
         mealLogRepository.deleteById(email);
+    }
+
+    public List<MealLogRequest> getMealsByMonth(int year, int month) {
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+
+        return mealLogRepository.findByDateBetween(startDate, endDate)
+                .stream()
+                .map(MealLogMapper::toDTO)
+                .toList();
     }
 }
